@@ -1766,3 +1766,13 @@ services:
         - ${DATA_PATH_HOST}/tomcat/logs:/usr/local/tomcat/logs
       # restart: always
 
+### Quasar App ####################################################
+    quasar:
+      container_name: app
+      build:
+        context: ./app
+      ports:
+        - '9091:9091'
+      volumes:
+        - '${APP_CODE_PATH_HOST}/app:/var/www/app'
+      command: /bin/sh -c "yarn && quasar dev"
