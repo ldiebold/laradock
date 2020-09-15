@@ -344,6 +344,28 @@ services:
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       ports:
-        - "${DEV_SERVER_PORT}:9091"
+        - "${APP_DEV_SERVER_PORT}:9091"
+      networks:
+        - frontend
+
+### Admin #####################################
+    admin:
+      build:
+        context: ./admin
+      working_dir: ${APP_CODE_PATH_CONTAINER}/admin
+      volumes:
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      ports:
+        - "${ADMIN_DEV_SERVER_PORT}:9092"
+      networks:
+        - frontend
+
+### Cypress #################################
+    cypress:
+      build:
+        context: ./cypress
+      working_dir: ${APP_CODE_PATH_CONTAINER}
+      volumes:
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       networks:
         - frontend
