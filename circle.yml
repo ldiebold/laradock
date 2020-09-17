@@ -1,7 +1,12 @@
 version: 2.1
 orbs:
-    cypress: cypress-io/cypress@1.26.0
+  cypress: cypress-io/cypress@1.26.0
 workflows:
-    build:
-        jobs:
-            - cypress/run
+  build:
+    docker:
+        - image: nginx
+        - image: mysql
+    jobs:
+      - cypress/run:
+          yarn: true
+          working_directory: app

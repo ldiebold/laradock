@@ -4,8 +4,8 @@ services:
 
 ### App #######################################
     app:
-      - command: "yarn build"
+      command: "yarn serve"
 
 ### Admin #####################################
     admin:
-      - command: "yarn build"
+      command: "yarn serve"

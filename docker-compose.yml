@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 networks:
   frontend:
@@ -18,6 +18,7 @@ services:
 
 ### Workspace Utilities ##################################
     workspace:
+      privileged: true
       build:
         context: ./workspace
         args:
@@ -115,6 +116,8 @@ services:
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ./php-worker/supervisord.d:/etc/supervisord.d
+        - /tmp/.X11-unix:/tmp/.X11-unix
+        - ./cypress/.cache/Cypress:/root/.cache/Cypress
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       ports:
@@ -130,9 +133,14 @@ services:
         - DOCKER_TLS_VERIFY=1
         - DOCKER_TLS_CERTDIR=/certs
         - DOCKER_CERT_PATH=/certs/client
+        - DISPLAY
+        - QT_X11_NO-MITSHM=1
+        - ELECTRON_ENABLE_LOGGING=false
+        - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
       networks:
         - frontend
         - backend
+      ipc: host
 
 ### PHP-FPM ##############################################
     php-fpm:
@@ -275,8 +283,14 @@ services:
       depends_on:
         - php-fpm
       networks:
-        - frontend
-        - backend
+        frontend:
+          aliases:
+            - first
+            - second
+        backend:
+          aliases:
+            - api.agripath.test
+            - app.agripath.test
 
 ### MySQL ################################################
     mysql:
