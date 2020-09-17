@@ -1,8 +1,5 @@
 #!/usr/bin/env groovy
 
-// Build Code in Production Mode
-#!/usr/bin/env groovy
-
 node('master') {
     stage('build') {
         // Start services (Let docker-compose build containers for testing)
