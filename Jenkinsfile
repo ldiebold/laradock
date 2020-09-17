@@ -2,10 +2,11 @@
 
 node('master') {
     stage('build') {
-        // Pull in laradock
-        git url: 'git@github.com:ldiebold/laradock.git'
 
         dir ('./laradock') {
+            // Pull in laradock
+            git url: 'git@github.com:ldiebold/laradock.git'
+            
             // Create .env file for testing
             sh 'cp .ci.env .env'
 
