@@ -2,6 +2,9 @@
 
 node('master') {
     stage('build') {
+        // Pull in laradock
+        git url: 'git@github.com:ldiebold/laradock.git'
+
         // Start services (Let docker-compose build containers for testing)
         sh "docker-compose up -d"
 
