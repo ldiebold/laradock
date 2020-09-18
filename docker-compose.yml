@@ -54,7 +54,6 @@ services:
           - INSTALL_NPM_GULP=${WORKSPACE_INSTALL_NPM_GULP}
           - INSTALL_NPM_BOWER=${WORKSPACE_INSTALL_NPM_BOWER}
           - INSTALL_NPM_VUE_CLI=${WORKSPACE_INSTALL_NPM_VUE_CLI}
-          - INSTALL_NPM_QUASAR_CLI=${WORKSPACE_INSTALL_NPM_QUASAR_CLI}
           - INSTALL_NPM_ANGULAR_CLI=${WORKSPACE_INSTALL_NPM_ANGULAR_CLI}
           - INSTALL_DRUSH=${WORKSPACE_INSTALL_DRUSH}
           - INSTALL_WP_CLI=${WORKSPACE_INSTALL_WP_CLI}
@@ -372,6 +371,8 @@ services:
       build:
         context: ./app
       working_dir: ${APP_CODE_PATH_CONTAINER}/app
+      environment:
+        - NPM_TOKEN=${NPM_TOKEN}
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       ports:
@@ -384,6 +385,8 @@ services:
       build:
         context: ./admin
       working_dir: ${APP_CODE_PATH_CONTAINER}/admin
+      environment:
+        - NPM_TOKEN=${NPM_TOKEN}
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       ports:
