@@ -1,5 +1,9 @@
 # specify the node base image with your desired version node:<version>
 FROM node:10
 
+COPY .npmrc /root
+
 RUN npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}" \
-    && npm publish
+    && npm publish \
+    && yarn add @quasar/cli \
+    && yarn
