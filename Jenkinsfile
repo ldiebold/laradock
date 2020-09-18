@@ -21,9 +21,9 @@ node('master') {
 
         dir ('./laradock') {
             // composer install
-            sh "docker-compose exec -t -w /var/www/api workspace composer install"
+            sh "docker-compose exec -T -w /var/www/api workspace composer install"
             // Generate key
-            sh "docker-compose exec -t -w '/var/www/api' workspace php artisan key:generate"
+            sh "docker-compose exec -T -w '/var/www/api' workspace php artisan key:generate"
         }
     }
     // stage('test') {
