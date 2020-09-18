@@ -11,12 +11,24 @@ node('master') {
             sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d"
         }
 
-        // If the 'api' directory doesn't exist, create it
+        // If the application directories don't exist, create them
         sh "mkdir -p ./code/api"
+        sh "mkdir -p ./code/app"
+        sh "mkdir -p ./code/admin"
 
         dir ('./code/api') {
             // Pull the api git repo
             git url: 'git@github.com:ldiebold/api.git'
+        }
+
+        dir ('./code/app') {
+            // Pull the app git repo
+            git url: 'git@github.com:ldiebold/agripath-app.git'
+        }
+
+        dir ('./code/admin') {
+            // Pull the admin git repo
+            git url: 'git@github.com:ldiebold/agripath-admin.git'
         }
 
         dir ('./laradock') {
