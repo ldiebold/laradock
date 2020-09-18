@@ -3,7 +3,8 @@ FROM node:10
 
 COPY .npmrc /root
 
-RUN npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}" \
+RUN cd app \
+    && npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}" \
     && npm publish \
     && yarn add @quasar/cli \
     && yarn
