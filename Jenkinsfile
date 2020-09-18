@@ -17,12 +17,12 @@ node('master') {
 
         dir ('./code') {
             // Pull the api git repo
-            git url: 'git@github.com:ldiebold/api.git'
+            git url: 'git@github.com:ldiebold/api.git api'
         }
 
         dir ('./laradock') {
             // composer install
-            sh "docker-compose run -w /var/www/api workspace composer install"
+            sh "docker-compose exec -w /var/www/api workspace composer install"
             // Generate key
             sh "docker-compose exec -w '/var/www/api' workspace php artisan key:generate"
         }
