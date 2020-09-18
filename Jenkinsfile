@@ -14,10 +14,12 @@ node('master') {
             sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d"
         }
 
+        // If the 'api' directory doesn't exist, create it
+        sh "mkdir -p ./code/api"
 
-        dir ('./code') {
+        dir ('./code/api') {
             // Pull the api git repo
-            git url: 'git@github.com:ldiebold/api.git api'
+            git url: 'git@github.com:ldiebold/api.git'
         }
 
         dir ('./laradock') {
