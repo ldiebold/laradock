@@ -7,9 +7,6 @@ node('master') {
             // Pull in laradock
             git url: 'git@github.com:ldiebold/laradock.git'
 
-            // Create .env file for testing
-            sh 'cp .ci.env .env'
-
             // Start services (Let docker-compose build containers for testing)
             sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d"
         }
