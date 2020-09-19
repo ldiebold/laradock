@@ -17,25 +17,36 @@ node('master') {
         sh "mkdir -p ./code/admin"
 
         dir ('./code/api') {
-            // Pull the api git repo
+            // Pull the api code
             git url: 'git@github.com:ldiebold/api.git'
         }
 
         dir ('./code/app') {
-            // Pull the app git repo
+            // Pull the app code
             git url: 'git@github.com:ldiebold/agripath-app.git'
         }
 
         dir ('./code/admin') {
-            // Pull the admin git repo
+            // Pull the admin code
             git url: 'git@github.com:ldiebold/agripath-admin.git'
         }
 
+        // API Setup
         dir ('./laradock') {
-            // composer install
+            // Install dependencies
             sh "docker-compose exec -T -w /var/www/api workspace composer install"
             // Generate key
             sh "docker-compose exec -T -w '/var/www/api' workspace php artisan key:generate"
+        }
+
+        // App Setup
+        dir ('./laradock') {
+            // Install dependencies
+            sh "docker-compose exec -T -w /var/www/app workspace yarn"
+            // Build production code
+            sh "docker-compose exec -T -w /var/www/app workspace yarn build"
+            // Serve production code!
+            sh "docker-compose run /var/www/app app yarn serve -p 9091"
         }
     }
     // stage('test') {
