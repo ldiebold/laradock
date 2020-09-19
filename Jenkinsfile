@@ -24,6 +24,8 @@ node('master') {
         dir ('./code/api') {
             // Pull the api code
             git url: 'git@github.com:ldiebold/api.git'
+            // Install api packages
+            sh "docker-compose exec -T -w /var/www/api workspace yarn"
         }
 
         dir ('./code/app') {
@@ -51,7 +53,7 @@ node('master') {
             // Build production code
             sh "docker-compose exec -T -w /var/www/app workspace yarn build"
             // Serve production code!
-            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up app"
+            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d app"
         }
 
         // Admin Setup
@@ -61,7 +63,7 @@ node('master') {
             // Build production code
             sh "docker-compose exec -T -w /var/www/admin workspace yarn build"
             // Serve production code!
-            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up admin"
+            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d admin"
         }
     }
     // stage('test') {
