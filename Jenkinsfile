@@ -24,6 +24,9 @@ node('master') {
         dir ('./code/api') {
             // Pull the api code
             git url: 'git@github.com:ldiebold/api.git'
+        }
+
+        dir ('./laradock') {
             // Install api packages
             sh "docker-compose exec -T -w /var/www/api workspace yarn"
         }
