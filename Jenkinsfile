@@ -51,7 +51,7 @@ node('master') {
             // Build production code
             sh "docker-compose exec -T -w /var/www/app workspace yarn build"
             // Serve production code!
-            sh "docker-compose run -w /var/www/app app yarn serve -p 9091"
+            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up app"
         }
 
         // Admin Setup
@@ -61,7 +61,7 @@ node('master') {
             // Build production code
             sh "docker-compose exec -T -w /var/www/admin workspace yarn build"
             // Serve production code!
-            sh "docker-compose run -w /var/www/admin admin yarn serve -p 9092"
+            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up admin"
         }
     }
     // stage('test') {
