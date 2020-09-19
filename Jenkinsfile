@@ -1,11 +1,6 @@
 #!/usr/bin/env groovy
 
 node('master') {
-    environment {
-        DISABLE_AUTH = 'true'
-        DB_ENGINE    = 'sqlite'
-    }
-
     stage('build') {
 
         dir ('./laradock') {
@@ -67,6 +62,13 @@ node('master') {
             sh "docker-compose exec -T -w /var/www/admin workspace yarn build"
             // Serve production code!
             sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d admin"
+        }
+
+        dir ('./laradock') {
+            // Start services (Let docker-compose build containers for testing)
+            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml restart -d nginx"
+
+            sh "docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI"
         }
     }
     // stage('test') {
