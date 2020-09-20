@@ -14,6 +14,25 @@ pipeline {
             // Pull the api code
             git url: 'git@github.com:ldiebold/api.git'
         }
+
+          // Install api packages
+          sh "docker-compose exec -T -w /var/www/api workspace yarn"
+
+        dir ('./code/app') {
+            // Pull the app code
+            git url: 'git@github.com:ldiebold/agripath-app.git'
+        }
+
+        dir ('./code/admin') {
+            // Pull the admin code
+            git url: 'git@github.com:ldiebold/agripath-admin.git'
+        }
+
+        // API Setup
+        // Install dependencies
+        sh "docker-compose exec -T -w /var/www/api workspace composer install"
+        // Generate key
+        sh "docker-compose exec -T -w '/var/www/api' workspace php artisan key:generate"
       }
     }
 
