@@ -1,5 +1,10 @@
 pipeline {
-  agent none
+  agent {
+    node {
+      label 'Docker Compose'
+    }
+
+  }
   stages {
     stage('build') {
       steps {
