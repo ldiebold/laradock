@@ -1,12 +1,19 @@
-#!/usr/bin/env groovy
-
 pipeline {
-    agent { docker { image 'maven:3.3.3' } }
-    stages {
-        stage('build') {
-            steps {
-                sh 'ls'
-            }
-        }
+  agent {
+    dockerfile {
+      filename 'docker-compose.yml'
     }
+
+  }
+  stages {
+    stage('build') {
+      steps {
+        dir(path: './laradock') {
+          sh 'ls'
+        }
+
+      }
+    }
+
+  }
 }
