@@ -387,3 +387,18 @@ services:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       networks:
         - frontend
+
+### Jenkins #################################
+    jenkins:
+      build:
+        context: ./jenkins
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - ./jenkins/jenkins_home:/var/jenkins_home
+        - ~/.ssh:/var/jenkins_home/.ssh
+      ports:
+        - "8090:8090"
+        - "50000:50000"
+      networks:
+        - frontend
+        - backend
