@@ -1,15 +1,10 @@
 pipeline {
-  agent {
-    dockerfile {
-      filename 'docker-compose.yml'
-    }
-
-  }
+  agent none
   stages {
     stage('build') {
       steps {
         dir(path: './laradock') {
-          sh 'ls'
+          sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d'
         }
 
       }
