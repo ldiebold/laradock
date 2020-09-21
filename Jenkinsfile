@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Start Docker') {
       steps {
-        sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d admin app mysql nginx php-fpm redis workspace'
+        sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d mysql php-fpm redis workspace'
       }
     }
 
@@ -45,8 +45,7 @@ pipeline {
 
     stage('Server Production Code') {
       steps {
-        sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d app'
-        sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d admin'
+        sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d app admin'
         sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml restart nginx'
       }
     }
