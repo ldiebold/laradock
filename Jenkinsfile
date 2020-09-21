@@ -9,18 +9,18 @@ pipeline {
 
     stage('Update Repositories') {
       steps {
-        sh 'mkdir -p ./code/api'
-        sh 'mkdir -p ./code/app'
-        sh 'mkdir -p ./code/admin'
-        dir(path: './code/api') {
+        sh 'mkdir -p ../code/api'
+        sh 'mkdir -p ../code/app'
+        sh 'mkdir -p ../code/admin'
+        dir(path: '../code/api') {
           git 'git@github.com:ldiebold/api.git'
         }
 
-        dir(path: './code/app') {
+        dir(path: '../code/app') {
           git 'git@github.com:ldiebold/agripath-app.git'
         }
 
-        dir(path: './code/admin') {
+        dir(path: '../code/admin') {
           git 'git@github.com:ldiebold/agripath-admin.git'
         }
 
