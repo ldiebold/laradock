@@ -33,4 +33,6 @@ EXPOSE 8090
 
 RUN usermod -a -G docker jenkins
 
+RUN chown jenkins: /var/run/docker.sock
+
 USER jenkins

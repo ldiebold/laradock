@@ -378,16 +378,6 @@ services:
       networks:
         - frontend
 
-### Cypress #################################
-    cypress:
-      build:
-        context: ./cypress
-      working_dir: ${APP_CODE_PATH_CONTAINER}
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      networks:
-        - frontend
-
 ### Jenkins #################################
     jenkins:
       build:
