@@ -264,6 +264,7 @@ services:
 ### NGINX Server #########################################
     nginx:
       build:
+        network: host
         context: ./nginx
         args:
           - CHANGE_SOURCE=${CHANGE_SOURCE}
