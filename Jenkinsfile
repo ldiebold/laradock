@@ -47,7 +47,7 @@ pipeline {
     stage('Server Production Code') {
       steps {
         sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d app admin'
-        sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml restart nginx'
+        sh 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d nginx'
       }
     }
 
