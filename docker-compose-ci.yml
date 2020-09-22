@@ -4,8 +4,8 @@ services:
 
 ### App #######################################
     app:
-      command: "yarn serve"
+      command: "yarn serve -p 9091"
 
 ### Admin #####################################
     admin:
-      command: "yarn serve"
+      command: "yarn serve -p 9092"
