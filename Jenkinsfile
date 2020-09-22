@@ -29,7 +29,7 @@ pipeline {
 
     stage('Install Dependencies') {
       steps {
-        sh 'docker-compose exec -T -w /var/www/api workspace composer install'
+        sh 'docker-compose exec -T -w /var/www/api workspace composer install --dev'
         sh 'docker-compose exec -T -w /var/www/api workspace yarn'
         sh 'docker-compose exec -T -w /var/www/admin workspace yarn'
         sh 'docker-compose exec -T -w /var/www/app workspace yarn'
