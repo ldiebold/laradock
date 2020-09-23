@@ -273,11 +273,11 @@ LARAVEL_HORIZON_PUID=1000
 ### MYSQL #################################################
 
 MYSQL_VERSION=latest
-MYSQL_DATABASE=default
-MYSQL_USER=default
+MYSQL_DATABASE=agripath
+MYSQL_USER=agripath
 MYSQL_PASSWORD=secret
 MYSQL_PORT=3306
-MYSQL_ROOT_PASSWORD=root
+MYSQL_ROOT_PASSWORD=secret
 MYSQL_ENTRYPOINT_INITDB=./mysql/docker-entrypoint-initdb.d
 
 ### REDIS #################################################
@@ -297,10 +297,6 @@ LARAVEL_ECHO_SERVER_PORT=6001
 JENKINS_HOST_HTTP_PORT=8090
 JENKINS_HOST_SLAVE_AGENT_PORT=50000
 JENKINS_HOME=./jenkins/jenkins_home
-
-### MEMCACHED #############################################
-
-MEMCACHED_HOST_PORT=11211
 
 ### APP ###################################################
 
