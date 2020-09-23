@@ -1,6 +1,7 @@
 .idea
 /logs
 /data
+/cypress
 .env
 /.project
 .docker-sync
