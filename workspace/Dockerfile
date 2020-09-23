@@ -737,6 +737,16 @@ RUN if [ ${SHELL_OH_MY_ZSH} = true ]; then \
 USER root
 
 ###########################################################################
+# Cypress Dependencies
+###########################################################################
+
+RUN apt-get update && apt-get install --no-install-recommends -y curl \
+  && curl -L https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list \
+  && apt-get update \
+  && apt-get -y install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb dbus-x11 libcanberra-gtk-module libcanberra-gtk3-module google-chrome-stable
+
+###########################################################################
 # NPM:
 ###########################################################################
 
