@@ -701,6 +701,8 @@ RUN set -xe; php -v | head -n 1 | grep -q "PHP ${LARADOCK_PHP_VERSION}."
 ###########################################################################
 
 COPY ssl/agripath-authority.crt /usr/local/share/ca-certificates
+COPY ssl/wildcard.agripath.test.crt /usr/local/share/ca-certificates
+COPY ssl/wildcard.agripath.test.key /usr/local/share/ca-certificates
 RUN dpkg-reconfigure ca-certificates && update-ca-certificates
 
 ###########################################################################
