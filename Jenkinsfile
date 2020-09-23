@@ -39,8 +39,8 @@ pipeline {
 
     stage('Build Production Code') {
       steps {
-        sh 'docker-compose exec -T -w /var/www/app workspace yarn build'
-        sh 'docker-compose exec -T -w /var/www/admin workspace yarn build'
+        sh 'docker-compose exec -T -w /var/www/app workspace yarn build:pwa'
+        sh 'docker-compose exec -T -w /var/www/admin workspace yarn build:pwa'
       }
     }
 
