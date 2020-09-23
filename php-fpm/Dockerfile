@@ -953,9 +953,6 @@ RUN if [ ${INSTALL_FAKETIME} = true ]; then \
     echo "/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1" > /etc/ld.so.preload \
     ;fi
 
-RUN chown -R www-data:www-data /var/www/api/storage \
-    && chmod g+rwx /var/www/api/storage
-
 # Configure locale.
 ARG LOCALE=POSIX
 ENV LC_ALL ${LOCALE}
