@@ -39,6 +39,7 @@ pipeline {
 
     stage('Build Production Code') {
       steps {
+        sh 'docker-compose exec -T -w /var/www/api workspace php artisan key:generate'
         sh 'docker-compose exec -T -w /var/www/app workspace yarn build:pwa'
         sh 'docker-compose exec -T -w /var/www/admin workspace yarn build:pwa'
       }
