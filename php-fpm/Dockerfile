@@ -31,34 +31,34 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
     sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list && \
     sed -i 's/security.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list && \
     sed -i 's/security-cdn.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
-;fi
+    ;fi
 
 # always run apt update when start and after add new source list, then clean up at end.
 RUN set -xe; \
     apt-get update -yqq && \
     pecl channel-update pecl.php.net && \
     apt-get install -yqq \
-      apt-utils \
-      #
-      #--------------------------------------------------------------------------
-      # Mandatory Software's Installation
-      #--------------------------------------------------------------------------
-      #
-      # Mandatory Software's such as ("mcrypt", "pdo_mysql", "libssl-dev", ....)
-      # are installed on the base image 'laradock/php-fpm' image. If you want
-      # to add more Software's or remove existing one, you need to edit the
-      # base image (https://github.com/Laradock/php-fpm).
-      #
-      # next lines are here becase there is no auto build on dockerhub see https://github.com/laradock/laradock/pull/1903#issuecomment-463142846
-      libzip-dev zip unzip && \
-      if [ ${LARADOCK_PHP_VERSION} = "7.3" ] || [ ${LARADOCK_PHP_VERSION} = "7.4" ]; then \
-        docker-php-ext-configure zip; \
-      else \
-        docker-php-ext-configure zip --with-libzip; \
-      fi && \
-      # Install the zip extension
-      docker-php-ext-install zip && \
-      php -m | grep -q 'zip'
+    apt-utils \
+    #
+    #--------------------------------------------------------------------------
+    # Mandatory Software's Installation
+    #--------------------------------------------------------------------------
+    #
+    # Mandatory Software's such as ("mcrypt", "pdo_mysql", "libssl-dev", ....)
+    # are installed on the base image 'laradock/php-fpm' image. If you want
+    # to add more Software's or remove existing one, you need to edit the
+    # base image (https://github.com/Laradock/php-fpm).
+    #
+    # next lines are here becase there is no auto build on dockerhub see https://github.com/laradock/laradock/pull/1903#issuecomment-463142846
+    libzip-dev zip unzip && \
+    if [ ${LARADOCK_PHP_VERSION} = "7.3" ] || [ ${LARADOCK_PHP_VERSION} = "7.4" ]; then \
+    docker-php-ext-configure zip; \
+    else \
+    docker-php-ext-configure zip --with-libzip; \
+    fi && \
+    # Install the zip extension
+    docker-php-ext-install zip && \
+    php -m | grep -q 'zip'
 
 #
 #--------------------------------------------------------------------------
@@ -77,9 +77,9 @@ RUN set -xe; \
 
 ARG INSTALL_BZ2=false
 RUN if [ ${INSTALL_BZ2} = true ]; then \
-  apt-get -y install libbz2-dev; \
-  docker-php-ext-install bz2 \
-;fi
+    apt-get -y install libbz2-dev; \
+    docker-php-ext-install bz2 \
+    ;fi
 
 ###########################################################################
 # GMP (GNU Multiple Precision):
@@ -89,12 +89,12 @@ ARG INSTALL_GMP=false
 
 RUN if [ ${INSTALL_GMP} = true ]; then \
     # Install the GMP extension
-	  apt-get install -y libgmp-dev && \
+    apt-get install -y libgmp-dev && \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h \
+    ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h \
     ;fi && \
     docker-php-ext-install gmp \
-;fi
+    ;fi
 
 ###########################################################################
 # SSH2:
@@ -106,12 +106,12 @@ RUN if [ ${INSTALL_SSH2} = true ]; then \
     # Install the ssh2 extension
     apt-get -y install libssh2-1-dev && \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-        pecl install -a ssh2-0.13; \
+    pecl install -a ssh2-0.13; \
     else \
-        pecl install -a ssh2-1.2; \
+    pecl install -a ssh2-1.2; \
     fi && \
     docker-php-ext-enable ssh2 \
-;fi
+    ;fi
 
 ###########################################################################
 # libfaketime:
@@ -123,7 +123,7 @@ ARG INSTALL_FAKETIME=false
 
 RUN if [ ${INSTALL_FAKETIME} = true ]; then \
     apt-get install -y libfaketime \
-;fi
+    ;fi
 
 ###########################################################################
 # SOAP:
@@ -136,7 +136,7 @@ RUN if [ ${INSTALL_SOAP} = true ]; then \
     rm /etc/apt/preferences.d/no-debian-php && \
     apt-get -y install libxml2-dev php-soap && \
     docker-php-ext-install soap \
-;fi
+    ;fi
 
 ###########################################################################
 # XSL:
@@ -148,7 +148,7 @@ RUN if [ ${INSTALL_XSL} = true ]; then \
     # Install the xsl extension
     apt-get -y install libxslt-dev && \
     docker-php-ext-install xsl \
-;fi
+    ;fi
 
 ###########################################################################
 # pgsql
@@ -159,7 +159,7 @@ ARG INSTALL_PGSQL=false
 RUN if [ ${INSTALL_PGSQL} = true ]; then \
     # Install the pgsql extension
     docker-php-ext-install pgsql \
-;fi
+    ;fi
 
 ###########################################################################
 # pgsql client
@@ -175,9 +175,9 @@ RUN if [ ${INSTALL_PG_CLIENT} = true ]; then \
     # Install the pgsql client
     apt-get install -y postgresql-client && \
     if [ ${INSTALL_POSTGIS} = true ]; then \
-      apt-get install -y postgis; \
+    apt-get install -y postgis; \
     fi \
-;fi
+    ;fi
 
 ###########################################################################
 # xDebug:
@@ -186,18 +186,18 @@ RUN if [ ${INSTALL_PG_CLIENT} = true ]; then \
 ARG INSTALL_XDEBUG=false
 
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
-  # Install the xdebug extension
-  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
+    # Install the xdebug extension
+    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
     pecl install xdebug-2.5.5; \
-  else \
-    if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
-      pecl install xdebug-2.9.0; \
     else \
-      pecl install xdebug; \
+    if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
+    pecl install xdebug-2.9.0; \
+    else \
+    pecl install xdebug; \
     fi \
-  fi && \
-  docker-php-ext-enable xdebug \
-;fi
+    fi && \
+    docker-php-ext-enable xdebug \
+    ;fi
 
 # Copy xdebug configuration for remote debugging
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
@@ -215,13 +215,13 @@ USER root
 ARG INSTALL_PCOV=false
 
 RUN if [ ${INSTALL_PCOV} = true ]; then \
-  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
+    if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
     if [ $(php -r "echo PHP_MINOR_VERSION;") != "0" ]; then \
-      pecl install pcov && \
-      docker-php-ext-enable pcov \
+    pecl install pcov && \
+    docker-php-ext-enable pcov \
     ;fi \
-  ;fi \
-;fi
+    ;fi \
+    ;fi
 
 ###########################################################################
 # Phpdbg:
@@ -232,7 +232,7 @@ ARG INSTALL_PHPDBG=false
 RUN if [ ${INSTALL_PHPDBG} = true ]; then \
     # Load the xdebug extension only with phpunit commands
     apt-get install -y --force-yes php${LARADOCK_PHP_VERSION}-phpdbg \
-;fi
+    ;fi
 
 ###########################################################################
 # Blackfire:
@@ -246,7 +246,7 @@ RUN if [ ${INSTALL_XDEBUG} = false -a ${INSTALL_BLACKFIRE} = true ]; then \
     && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
     && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
     && printf "extension=blackfire.so\nblackfire.agent_socket=tcp://blackfire:8707\n" > $PHP_INI_DIR/conf.d/blackfire.ini \
-;fi
+    ;fi
 
 ###########################################################################
 # PHP REDIS EXTENSION
@@ -257,13 +257,13 @@ ARG INSTALL_PHPREDIS=false
 RUN if [ ${INSTALL_PHPREDIS} = true ]; then \
     # Install Php Redis Extension
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      pecl install -o -f redis-4.3.0; \
+    pecl install -o -f redis-4.3.0; \
     else \
-      pecl install -o -f redis; \
+    pecl install -o -f redis; \
     fi \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis \
-;fi
+    ;fi
 
 ###########################################################################
 # Swoole EXTENSION
@@ -274,17 +274,17 @@ ARG INSTALL_SWOOLE=false
 RUN if [ ${INSTALL_SWOOLE} = true ]; then \
     # Install Php Swoole Extension
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      pecl install swoole-2.0.10; \
+    pecl install swoole-2.0.10; \
     else \
-      if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
-        pecl install swoole-2.2.0; \
-      else \
-        pecl install swoole; \
-      fi \
+    if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
+    pecl install swoole-2.2.0; \
+    else \
+    pecl install swoole; \
+    fi \
     fi && \
     docker-php-ext-enable swoole \
     && php -m | grep -q 'swoole' \
-;fi
+    ;fi
 
 ###########################################################################
 # Taint EXTENSION
@@ -295,11 +295,11 @@ ARG INSTALL_TAINT=false
 RUN if [ ${INSTALL_TAINT} = true ]; then \
     # Install Php TAINT Extension
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-      pecl install taint && \
-      docker-php-ext-enable taint && \
-      php -m | grep -q 'taint'; \
+    pecl install taint && \
+    docker-php-ext-enable taint && \
+    php -m | grep -q 'taint'; \
     fi \
-;fi
+    ;fi
 
 ###########################################################################
 # MongoDB:
@@ -310,12 +310,12 @@ ARG INSTALL_MONGO=false
 RUN if [ ${INSTALL_MONGO} = true ]; then \
     # Install the mongodb extension
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      pecl install mongo && \
-      docker-php-ext-enable mongo \
+    pecl install mongo && \
+    docker-php-ext-enable mongo \
     ;fi && \
     pecl install mongodb && \
     docker-php-ext-enable mongodb \
-;fi
+    ;fi
 
 ###########################################################################
 # Xhprof:
@@ -326,28 +326,28 @@ ARG INSTALL_XHPROF=false
 RUN if [ ${INSTALL_XHPROF} = true ]; then \
     # Install the php xhprof extension
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = 7 ]; then \
-      curl -L -o /tmp/xhprof.tar.gz "https://github.com/tideways/php-xhprof-extension/archive/v5.0.1.tar.gz"; \
+    curl -L -o /tmp/xhprof.tar.gz "https://github.com/tideways/php-xhprof-extension/archive/v5.0.1.tar.gz"; \
     else \ 
-      curl -L -o /tmp/xhprof.tar.gz "https://codeload.github.com/phacility/xhprof/tar.gz/master"; \
+    curl -L -o /tmp/xhprof.tar.gz "https://codeload.github.com/phacility/xhprof/tar.gz/master"; \
     fi \
     && mkdir -p xhprof \
     && tar -C xhprof -zxvf /tmp/xhprof.tar.gz --strip 1 \
     && ( \
-        cd xhprof \
-        && phpize \
-        && ./configure \
-        && make \
-        && make install \
+    cd xhprof \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install \
     ) \
     && rm -r xhprof \
     && rm /tmp/xhprof.tar.gz \
-;fi
+    ;fi
 
 COPY ./xhprof.ini /usr/local/etc/php/conf.d
 
 RUN if [ ${INSTALL_XHPROF} = false ]; then \
     rm /usr/local/etc/php/conf.d/xhprof.ini \
-;fi
+    ;fi
 
 ###########################################################################
 # AMQP:
@@ -371,7 +371,7 @@ RUN if [ ${INSTALL_AMQP} = true ]; then \
     docker-php-ext-enable amqp && \
     # Install the sockets extension
     docker-php-ext-install sockets \
-;fi
+    ;fi
 
 ###########################################################################
 # GEARMAN:
@@ -394,7 +394,7 @@ RUN if [ ${INSTALL_GEARMAN} = true ]; then \
     rm /tmp/gearman-2.0.5.zip && \
     rm -r /tmp/pecl-gearman && \
     docker-php-ext-enable gearman \
-;fi
+    ;fi
 
 ###########################################################################
 # pcntl
@@ -404,7 +404,7 @@ ARG INSTALL_PCNTL=false
 RUN if [ ${INSTALL_PCNTL} = true ]; then \
     # Installs pcntl, helpful for running Horizon
     docker-php-ext-install pcntl \
-;fi
+    ;fi
 
 ###########################################################################
 # bcmath:
@@ -415,7 +415,7 @@ ARG INSTALL_BCMATH=false
 RUN if [ ${INSTALL_BCMATH} = true ]; then \
     # Install the bcmath extension
     docker-php-ext-install bcmath \
-;fi
+    ;fi
 
 ###########################################################################
 # PHP Memcached:
@@ -426,12 +426,12 @@ ARG INSTALL_MEMCACHED=false
 RUN if [ ${INSTALL_MEMCACHED} = true ]; then \
     # Install the php memcached extension
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      pecl install memcached-2.2.0; \
+    pecl install memcached-2.2.0; \
     else \
-      pecl install memcached-3.1.3; \
+    pecl install memcached-3.1.3; \
     fi \
     && docker-php-ext-enable memcached \
-;fi
+    ;fi
 
 ###########################################################################
 # Exif:
@@ -442,7 +442,7 @@ ARG INSTALL_EXIF=false
 RUN if [ ${INSTALL_EXIF} = true ]; then \
     # Enable Exif PHP extentions requirements
     docker-php-ext-install exif \
-;fi
+    ;fi
 
 ###########################################################################
 # PHP Aerospike:
@@ -458,31 +458,31 @@ RUN set -xe; \
     apt-get -y install sudo wget && \
     # Install the php aerospike extension
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      curl -L -o /tmp/aerospike-client-php.tar.gz https://github.com/aerospike/aerospike-client-php5/archive/master.tar.gz; \
+    curl -L -o /tmp/aerospike-client-php.tar.gz https://github.com/aerospike/aerospike-client-php5/archive/master.tar.gz; \
     else \
-      curl -L -o /tmp/aerospike-client-php.tar.gz https://github.com/aerospike/aerospike-client-php/archive/master.tar.gz; \
+    curl -L -o /tmp/aerospike-client-php.tar.gz https://github.com/aerospike/aerospike-client-php/archive/master.tar.gz; \
     fi \
     && mkdir -p /tmp/aerospike-client-php \
     && tar -C /tmp/aerospike-client-php -zxvf /tmp/aerospike-client-php.tar.gz --strip 1 \
     && \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      ( \
-          cd /tmp/aerospike-client-php/src/aerospike \
-          && phpize \
-          && ./build.sh \
-          && make install \
-      ) \
+    ( \
+    cd /tmp/aerospike-client-php/src/aerospike \
+    && phpize \
+    && ./build.sh \
+    && make install \
+    ) \
     else \
-      ( \
-          cd /tmp/aerospike-client-php/src \
-          && phpize \
-          && ./build.sh \
-          && make install \
-      ) \
+    ( \
+    cd /tmp/aerospike-client-php/src \
+    && phpize \
+    && ./build.sh \
+    && make install \
+    ) \
     fi \
     && rm /tmp/aerospike-client-php.tar.gz \
     && docker-php-ext-enable aerospike \
-;fi
+    ;fi
 
 ###########################################################################
 # PHP OCI8:
@@ -501,33 +501,33 @@ RUN if [ ${INSTALL_OCI8} = true ]; then \
     apt-get update && apt-get install --no-install-recommends -y wget \
     # Install Oracle Instantclient
     && mkdir /opt/oracle \
-        && cd /opt/oracle \
-        && wget https://github.com/diogomascarenha/oracle-instantclient/raw/master/instantclient-basic-linux.x64-12.1.0.2.0.zip \
-        && wget https://github.com/diogomascarenha/oracle-instantclient/raw/master/instantclient-sdk-linux.x64-12.1.0.2.0.zip \
-        && unzip /opt/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
-        && unzip /opt/oracle/instantclient-sdk-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
-        && ln -s /opt/oracle/instantclient_12_1/libclntsh.so.12.1 /opt/oracle/instantclient_12_1/libclntsh.so \
-        && ln -s /opt/oracle/instantclient_12_1/libclntshcore.so.12.1 /opt/oracle/instantclient_12_1/libclntshcore.so \
-        && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
-        && rm -rf /opt/oracle/*.zip \
+    && cd /opt/oracle \
+    && wget https://github.com/diogomascarenha/oracle-instantclient/raw/master/instantclient-basic-linux.x64-12.1.0.2.0.zip \
+    && wget https://github.com/diogomascarenha/oracle-instantclient/raw/master/instantclient-sdk-linux.x64-12.1.0.2.0.zip \
+    && unzip /opt/oracle/instantclient-basic-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+    && unzip /opt/oracle/instantclient-sdk-linux.x64-12.1.0.2.0.zip -d /opt/oracle \
+    && ln -s /opt/oracle/instantclient_12_1/libclntsh.so.12.1 /opt/oracle/instantclient_12_1/libclntsh.so \
+    && ln -s /opt/oracle/instantclient_12_1/libclntshcore.so.12.1 /opt/oracle/instantclient_12_1/libclntshcore.so \
+    && ln -s /opt/oracle/instantclient_12_1/libocci.so.12.1 /opt/oracle/instantclient_12_1/libocci.so \
+    && rm -rf /opt/oracle/*.zip \
     # Install PHP extensions deps
     && apt-get update \
-        && apt-get install --no-install-recommends -y \
-            libaio-dev \
-            freetds-dev && \
+    && apt-get install --no-install-recommends -y \
+    libaio-dev \
+    freetds-dev && \
     # Install PHP extensions
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8-2.0.10; \
+    echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8-2.0.10; \
     else \
-      echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8; \
+    echo 'instantclient,/opt/oracle/instantclient_12_1/' | pecl install oci8; \
     fi \
-        && docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/opt/oracle/instantclient_12_1,12.1 \
-        && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
-        && docker-php-ext-install \
-                pdo_oci \
-        && docker-php-ext-enable \
-                oci8 \
-  ;fi
+    && docker-php-ext-configure pdo_oci --with-pdo-oci=instantclient,/opt/oracle/instantclient_12_1,12.1 \
+    && docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu \
+    && docker-php-ext-install \
+    pdo_oci \
+    && docker-php-ext-enable \
+    oci8 \
+    ;fi
 
 ###########################################################################
 # IonCube Loader:
@@ -542,7 +542,7 @@ RUN if [ ${INSTALL_IONCUBE} = true ]; then \
     && mv /tmp/ioncube/ioncube_loader_lin_${LARADOCK_PHP_VERSION}.so $(php -r "echo ini_get('extension_dir');")/ioncube_loader.so \
     && printf "zend_extension=ioncube_loader.so\n" > $PHP_INI_DIR/conf.d/0ioncube.ini \
     && rm -rf /tmp/ioncube* \
-;fi
+    ;fi
 
 ###########################################################################
 # Opcache:
@@ -552,7 +552,7 @@ ARG INSTALL_OPCACHE=false
 
 RUN if [ ${INSTALL_OPCACHE} = true ]; then \
     docker-php-ext-install opcache \
-;fi
+    ;fi
 
 # Copy opcache configration
 COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
@@ -565,7 +565,7 @@ ARG INSTALL_MYSQLI=false
 
 RUN if [ ${INSTALL_MYSQLI} = true ]; then \
     docker-php-ext-install mysqli \
-;fi
+    ;fi
 
 
 ###########################################################################
@@ -579,7 +579,7 @@ RUN if [ ${INSTALL_INTL} = true ]; then \
     apt-get install -y zlib1g-dev libicu-dev g++ && \
     docker-php-ext-configure intl && \
     docker-php-ext-install intl \
-;fi
+    ;fi
 
 ###########################################################################
 # GHOSTSCRIPT:
@@ -593,7 +593,7 @@ RUN if [ ${INSTALL_GHOSTSCRIPT} = true ]; then \
     apt-get install -y \
     poppler-utils \
     ghostscript \
-;fi
+    ;fi
 
 ###########################################################################
 # LDAP:
@@ -605,7 +605,7 @@ RUN if [ ${INSTALL_LDAP} = true ]; then \
     apt-get install -y libldap2-dev && \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
     docker-php-ext-install ldap \
-;fi
+    ;fi
 
 ###########################################################################
 # SQL SERVER:
@@ -614,39 +614,39 @@ RUN if [ ${INSTALL_LDAP} = true ]; then \
 ARG INSTALL_MSSQL=false
 
 RUN set -eux; \
-  if [ ${INSTALL_MSSQL} = true ]; then \
+    if [ ${INSTALL_MSSQL} = true ]; then \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-      apt-get -y install freetds-dev libsybdb5 \
-      && ln -s /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/libsybdb.so \
-      && docker-php-ext-install mssql pdo_dblib \
-      && php -m | grep -q 'mssql' \
-      && php -m | grep -q 'pdo_dblib' \
+    apt-get -y install freetds-dev libsybdb5 \
+    && ln -s /usr/lib/x86_64-linux-gnu/libsybdb.so /usr/lib/libsybdb.so \
+    && docker-php-ext-install mssql pdo_dblib \
+    && php -m | grep -q 'mssql' \
+    && php -m | grep -q 'pdo_dblib' \
     ;else \
-      ###########################################################################
-      # Ref from https://github.com/Microsoft/msphpsql/wiki/Dockerfile-for-adding-pdo_sqlsrv-and-sqlsrv-to-official-php-image
-      ###########################################################################
-      # Add Microsoft repo for Microsoft ODBC Driver 13 for Linux
-      apt-get install -y apt-transport-https gnupg \
-      && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-      && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-      && apt-get update -yqq \
-      # Install Dependencies
-      && ACCEPT_EULA=Y apt-get install -y unixodbc unixodbc-dev libgss3 odbcinst msodbcsql17 locales \
-      && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
-      # link local aliases
-      && ln -sfn /etc/locale.alias /usr/share/locale/locale.alias \
-      && locale-gen \
-      # Install pdo_sqlsrv and sqlsrv from PECL. Replace pdo_sqlsrv-4.1.8preview with preferred version.
-      && if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
-        pecl install pdo_sqlsrv-5.3.0 sqlsrv-5.3.0 \
-      ;else \
-        pecl install pdo_sqlsrv sqlsrv \
-      ;fi \
-      && docker-php-ext-enable pdo_sqlsrv sqlsrv \
-      && php -m | grep -q 'pdo_sqlsrv' \
-      && php -m | grep -q 'sqlsrv' \
+    ###########################################################################
+    # Ref from https://github.com/Microsoft/msphpsql/wiki/Dockerfile-for-adding-pdo_sqlsrv-and-sqlsrv-to-official-php-image
+    ###########################################################################
+    # Add Microsoft repo for Microsoft ODBC Driver 13 for Linux
+    apt-get install -y apt-transport-https gnupg \
+    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+    && apt-get update -yqq \
+    # Install Dependencies
+    && ACCEPT_EULA=Y apt-get install -y unixodbc unixodbc-dev libgss3 odbcinst msodbcsql17 locales \
+    && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
+    # link local aliases
+    && ln -sfn /etc/locale.alias /usr/share/locale/locale.alias \
+    && locale-gen \
+    # Install pdo_sqlsrv and sqlsrv from PECL. Replace pdo_sqlsrv-4.1.8preview with preferred version.
+    && if [ $(php -r "echo PHP_MINOR_VERSION;") = "0" ]; then \
+    pecl install pdo_sqlsrv-5.3.0 sqlsrv-5.3.0 \
+    ;else \
+    pecl install pdo_sqlsrv sqlsrv \
     ;fi \
-  ;fi
+    && docker-php-ext-enable pdo_sqlsrv sqlsrv \
+    && php -m | grep -q 'pdo_sqlsrv' \
+    && php -m | grep -q 'sqlsrv' \
+    ;fi \
+    ;fi
 
 ###########################################################################
 # Image optimizers:
@@ -658,7 +658,7 @@ ARG INSTALL_IMAGE_OPTIMIZERS=false
 
 RUN if [ ${INSTALL_IMAGE_OPTIMIZERS} = true ]; then \
     apt-get install -y jpegoptim optipng pngquant gifsicle \
-;fi
+    ;fi
 
 ###########################################################################
 # ImageMagick:
@@ -672,7 +672,7 @@ RUN if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
     apt-get install -y libmagickwand-dev imagemagick && \
     pecl install imagick && \
     docker-php-ext-enable imagick \
-;fi
+    ;fi
 
 ###########################################################################
 # SMB:
@@ -682,7 +682,7 @@ ARG INSTALL_SMB=false
 
 RUN if [ ${INSTALL_SMB} = true ]; then \
     apt-get install -y smbclient php-smbclient coreutils \
-;fi
+    ;fi
 
 ###########################################################################
 # IMAP:
@@ -694,7 +694,7 @@ RUN if [ ${INSTALL_IMAP} = true ]; then \
     apt-get install -y libc-client-dev libkrb5-dev && \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
     docker-php-ext-install imap \
-;fi
+    ;fi
 
 ###########################################################################
 # Calendar:
@@ -707,7 +707,7 @@ ARG INSTALL_CALENDAR=false
 RUN if [ ${INSTALL_CALENDAR} = true ]; then \
     docker-php-ext-configure calendar && \
     docker-php-ext-install calendar \
-;fi
+    ;fi
 
 ###########################################################################
 # Phalcon:
@@ -735,7 +735,7 @@ RUN if [ $INSTALL_PHALCON = true ]; then \
     && ./install \
     && mv /usr/local/etc/php/conf.d/phalcon.ini.disable /usr/local/etc/php/conf.d/phalcon.ini \
     && rm -rf /tmp/cphalcon* \
-;fi
+    ;fi
 
 ###########################################################################
 # APCU:
@@ -745,12 +745,12 @@ ARG INSTALL_APCU=false
 
 RUN if [ ${INSTALL_APCU} = true ]; then \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-        pecl install -a apcu-4.0.11; \
+    pecl install -a apcu-4.0.11; \
     else \
-        pecl install apcu; \
+    pecl install apcu; \
     fi && \
     docker-php-ext-enable apcu \
-;fi
+    ;fi
 
 ###########################################################################
 # YAML:
@@ -763,12 +763,12 @@ ARG INSTALL_YAML=false
 RUN if [ ${INSTALL_YAML} = true ]; then \
     apt-get install libyaml-dev -y ; \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "5" ]; then \
-        pecl install -a yaml-1.3.2; \
+    pecl install -a yaml-1.3.2; \
     else \
-        pecl install yaml; \
+    pecl install yaml; \
     fi && \
     docker-php-ext-enable yaml \
-;fi
+    ;fi
 
 ###########################################################################
 # RDKAFKA:
@@ -780,7 +780,7 @@ RUN if [ ${INSTALL_RDKAFKA} = true ]; then \
     apt-get install -y librdkafka-dev && \
     pecl install rdkafka && \
     docker-php-ext-enable rdkafka \
-;fi
+    ;fi
 
 ###########################################################################
 # GETTEXT:
@@ -791,7 +791,7 @@ ARG INSTALL_GETTEXT=false
 RUN if [ ${INSTALL_GETTEXT} = true ]; then \
     apt-get install -y zlib1g-dev libicu-dev g++ libpq-dev libssl-dev gettext && \
     docker-php-ext-install gettext \
-;fi
+    ;fi
 
 ###########################################################################
 # Install additional locales:
@@ -807,7 +807,7 @@ RUN if [ ${INSTALL_ADDITIONAL_LOCALES} = true ]; then \
     && temp="${temp#\"}" \
     && for i in ${temp}; do sed -i "/$i/s/^#//g" /etc/locale.gen; done \
     && locale-gen \
-;fi
+    ;fi
 
 ###########################################################################
 # MySQL Client:
@@ -818,8 +818,8 @@ USER root
 ARG INSTALL_MYSQL_CLIENT=false
 
 RUN if [ ${INSTALL_MYSQL_CLIENT} = true ]; then \
-      apt-get -y install default-mysql-client \
-;fi
+    apt-get -y install default-mysql-client \
+    ;fi
 
 ###########################################################################
 # ping:
@@ -831,7 +831,7 @@ ARG INSTALL_PING=false
 
 RUN if [ ${INSTALL_PING} = true ]; then \
     apt-get -y install inetutils-ping \
-;fi
+    ;fi
 
 ###########################################################################
 # sshpass:
@@ -843,7 +843,7 @@ ARG INSTALL_SSHPASS=false
 
 RUN if [ ${INSTALL_SSHPASS} = true ]; then \
     apt-get -y install sshpass \
-;fi
+    ;fi
 
 ###########################################################################
 # FFMPEG:
@@ -855,7 +855,7 @@ ARG INSTALL_FFMPEG=false
 
 RUN if [ ${INSTALL_FFMPEG} = true ]; then \
     apt-get -y install ffmpeg \
-;fi
+    ;fi
 
 #####################################
 # wkhtmltopdf:
@@ -875,7 +875,7 @@ RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
     wget \
     && wget https://github.com/h4cc/wkhtmltopdf-amd64/blob/master/bin/wkhtmltopdf-amd64?raw=true -O /usr/local/bin/wkhtmltopdf \
     && chmod +x /usr/local/bin/wkhtmltopdf \
-;fi
+    ;fi
 
 ###########################################################################
 # Mailparse extension:
@@ -888,7 +888,7 @@ RUN if [ ${INSTALL_MAILPARSE} = true ]; then \
     printf "\n" | pecl install -o -f mailparse \
     &&  rm -rf /tmp/pear \
     &&  docker-php-ext-enable mailparse \
-;fi
+    ;fi
 
 ###########################################################################
 # CacheTool:
@@ -898,13 +898,13 @@ ARG INSTALL_CACHETOOL=false
 
 RUN if [ ${INSTALL_CACHETOOL} = true ]; then \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ] && [ $(php -r "echo PHP_MINOR_VERSION;") -ge 1 ]; then \
-            curl -sO http://gordalina.github.io/cachetool/downloads/cachetool.phar; \
+    curl -sO http://gordalina.github.io/cachetool/downloads/cachetool.phar; \
     else \
-        curl http://gordalina.github.io/cachetool/downloads/cachetool-3.2.1.phar -o cachetool.phar; \
+    curl http://gordalina.github.io/cachetool/downloads/cachetool-3.2.1.phar -o cachetool.phar; \
     fi && \
     chmod +x cachetool.phar && \
     mv cachetool.phar /usr/local/bin/cachetool \
-;fi
+    ;fi
 
 ###########################################################################
 # XMLRPC:
@@ -914,7 +914,7 @@ ARG INSTALL_XMLRPC=false
 
 RUN if [ ${INSTALL_XMLRPC} = true ]; then \
     docker-php-ext-install xmlrpc \
-;fi
+    ;fi
 
 ###########################################################################
 # Check PHP version:
@@ -951,7 +951,10 @@ RUN groupmod -o -g ${PGID} www-data && \
 # otherwise it will preload it for all commands that follow in this file
 RUN if [ ${INSTALL_FAKETIME} = true ]; then \
     echo "/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1" > /etc/ld.so.preload \
-;fi
+    ;fi
+
+RUN chown -R www-data:www-data /var/www/api/storage \
+    && chmod g+rwx /var/www/api/storage
 
 # Configure locale.
 ARG LOCALE=POSIX
