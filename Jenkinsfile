@@ -23,7 +23,7 @@ pipeline {
           }
         }
 
-        sh 'docker-compose exec -w /var/www/api php-fpm chgrp 1000 .'
+        sh 'docker-compose exec -T -w /var/www/api php-fpm chgrp 1000 .'
 
         dir(path: '../code/app') {
           git 'git@github.com:ldiebold/agripath-app.git'
