@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Start Docker') {
       steps {
-        sh: 'echo user is: $USER'
+        sh: 'echo "user is: ${USER}"'
         sh 'docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
       }
     }
