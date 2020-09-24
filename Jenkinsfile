@@ -16,19 +16,20 @@ pipeline {
             }
           }
 
-          sh 'docker-compose up -d workspace'
-
-          sh 'docker-compose exec -T -w /var/www/api workspace composer install'
-          sh 'docker-compose exec -T -w /var/www/api workspace yarn'
-          sh 'docker-compose exec -T -w /var/www/api workspace yarn cy:install'
-          sh 'docker-compose exec -T -w /var/www/api workspace php artisan key:generate'
-
-          sh 'docker-compose exec -T -w /var/www/admin workspace yarn'
-          sh 'docker-compose exec -T -w /var/www/admin workspace yarn build:pwa'
-
-          sh 'docker-compose exec -T -w /var/www/app workspace yarn'
-          sh 'docker-compose exec -T -w /var/www/app workspace yarn build:pwa'
         }
+        
+        sh 'docker-compose up -d workspace'
+
+        sh 'docker-compose exec -T -w /var/www/api workspace composer install'
+        sh 'docker-compose exec -T -w /var/www/api workspace yarn'
+        sh 'docker-compose exec -T -w /var/www/api workspace yarn cy:install'
+        sh 'docker-compose exec -T -w /var/www/api workspace php artisan key:generate'
+
+        sh 'docker-compose exec -T -w /var/www/admin workspace yarn'
+        sh 'docker-compose exec -T -w /var/www/admin workspace yarn build:pwa'
+
+        sh 'docker-compose exec -T -w /var/www/app workspace yarn'
+        sh 'docker-compose exec -T -w /var/www/app workspace yarn build:pwa'
 
         dir(path: '../code/app') {
           git 'git@github.com:ldiebold/agripath-app.git'
