@@ -23,7 +23,7 @@ pipeline {
           }
         }
 
-        sh 'docker-compose exec -T -w /var/www/api php-fpm chgrp www-data .'
+        sh 'docker-compose exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
 
         dir(path: '../code/app') {
           git 'git@github.com:ldiebold/agripath-app.git'
