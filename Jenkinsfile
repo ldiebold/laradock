@@ -14,7 +14,7 @@ pipeline {
         sh 'mkdir -p ../code/admin'
         dir(path: '../code/api') {
           git 'git@github.com:ldiebold/api.git'
-          sh 'chgrp -R www-data:www-data storage'
+          sh 'chgrp -R www-data storage'
         }
 
         dir(path: '../code/app') {
