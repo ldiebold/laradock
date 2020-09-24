@@ -47,17 +47,19 @@ pipeline {
       }
     }
 
-    parallel {
-      stage('Run tests agripath_1') {
-        environment { COMPOSE_PROJECT_NAME = 'agripath_1' }
-          sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
-          sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
-      }
+    stage('Run Tests') {
+      parallel {
+        stage('Run tests agripath_1') {
+          environment { COMPOSE_PROJECT_NAME = 'agripath_1' }
+            sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
+            sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
+        }
 
-      stage('Run tests agripath_2') {
-        environment { COMPOSE_PROJECT_NAME = 'agripath_2' }
-        sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
-        sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
+        stage('Run tests agripath_2') {
+          environment { COMPOSE_PROJECT_NAME = 'agripath_2' }
+          sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
+          sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
+        }
       }
     }
   }
