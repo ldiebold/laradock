@@ -14,7 +14,12 @@ pipeline {
         sh 'mkdir -p ../code/admin'
         dir(path: '../code/api') {
           git 'git@github.com:ldiebold/api.git'
+          // www-data needs ownership of storage so logs can be created
           sh 'chgrp -R www-data storage'
+          // if there's no .env file, lets go ahead and create it from the example .env
+          if (!fileExists('.env')) {
+            sh 'cp .env.cypress .env'
+          }
         }
 
         dir(path: '../code/app') {
