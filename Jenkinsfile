@@ -15,7 +15,6 @@ pipeline {
         dir(path: '../code/api') {
           git 'git@github.com:ldiebold/api.git'
           // www-data needs ownership of storage so logs can be created
-          sh 'chgrp 1000 storage'
           script {
             // if there's no .env file, lets go ahead and create it from the example .env
             if (!fileExists('.env')) {
@@ -24,6 +23,7 @@ pipeline {
           }
         }
 
+        sh 'docker-compose exec -w /var/www/api php-fpm chgrp 1000 .'
 
         dir(path: '../code/app') {
           git 'git@github.com:ldiebold/agripath-app.git'
