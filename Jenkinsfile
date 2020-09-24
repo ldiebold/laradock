@@ -1,22 +1,6 @@
 pipeline {
   agent any
   stages {
-    environment {
-      COMPOSE_PROJECT_NAME = 'agripath_2'
-    }
-    stage('Start Docker') {
-      steps {
-        sh 'echo "user is: ${USER}"'
-        sh 'docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
-      }
-    }
-
-    stage('Create the database') {
-      steps {
-        sh 'docker-compose exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
-      }
-    }
-
     stage('Update Repositories') {
       steps {
         sh 'mkdir -p ../code/api'
@@ -31,45 +15,50 @@ pipeline {
               sh 'cp .env.cypress .env'
             }
           }
-        }
 
-        sh 'docker-compose exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
+          sh 'composer install --dev'
+          sh 'yarn'
+          sh 'yarn cy:install'
+          sh 'php artisan key:generate'
+        }
 
         dir(path: '../code/app') {
           git 'git@github.com:ldiebold/agripath-app.git'
+          sh 'yarn'
+          sh 'yarn build:pwa'
         }
 
         dir(path: '../code/admin') {
           git 'git@github.com:ldiebold/agripath-admin.git'
+          sh 'yarn'
+          sh 'yarn build:pwa'
         }
-
       }
     }
 
-    stage('Install Dependencies') {
+    stage('Prepare Docker Containers') {
       steps {
-        sh 'docker-compose exec -T -w /var/www/api workspace composer install --dev'
-        sh 'docker-compose exec -T -w /var/www/api workspace yarn'
-        sh 'docker-compose exec -T -w /var/www/admin workspace yarn'
-        sh 'docker-compose exec -T -w /var/www/app workspace yarn'
-        sh 'docker-compose exec -T -w /var/www/api workspace yarn cy:install'
+        sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
+        sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
+        sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
+        sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
+        sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
+        sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
       }
     }
 
-    stage('Build Production Code') {
-      steps {
-        sh 'docker-compose exec -T -w /var/www/api workspace php artisan key:generate'
-        sh 'docker-compose exec -T -w /var/www/app workspace yarn build:pwa'
-        sh 'docker-compose exec -T -w /var/www/admin workspace yarn build:pwa'
+    parallel {
+      stage('Run tests agripath_1') {
+        environment { COMPOSE_PROJECT_NAME = 'agripath_1' }
+          sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
+          sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
       }
-    }
 
-    stage('Run Test') {
-      
-      steps {
+      stage('Run tests agripath_2') {
+        environment { COMPOSE_PROJECT_NAME = 'agripath_2' }
+        sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
         sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
       }
     }
-
   }
 }
