@@ -1,10 +1,19 @@
 pipeline {
   agent any
   stages {
+    environment {
+      COMPOSE_PROJECT_NAME = 'agripath_2'
+    }
     stage('Start Docker') {
       steps {
         sh 'echo "user is: ${USER}"'
         sh 'docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
+      }
+    }
+
+    stage('Create the database') {
+      steps {
+        sh 'docker-compose exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
       }
     }
 
@@ -56,6 +65,7 @@ pipeline {
     }
 
     stage('Run Test') {
+      
       steps {
         sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
       }
