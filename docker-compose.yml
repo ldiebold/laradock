@@ -54,9 +54,9 @@ services:
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       ports:
-        - "${WORKSPACE_SSH_PORT}:22"
-        - "${WORKSPACE_BROWSERSYNC_HOST_PORT}:3000"
-        - "${WORKSPACE_BROWSERSYNC_UI_HOST_PORT}:3001"
+        - "22"
+        # - "${WORKSPACE_BROWSERSYNC_HOST_PORT}:3000"
+        # - "${WORKSPACE_BROWSERSYNC_UI_HOST_PORT}:3001"
       tty: true
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
@@ -208,7 +208,7 @@ services:
         - ${DATA_PATH_HOST}/${COMPOSE_PROJECT_NAME}/mysql:/var/lib/mysql
         - ${MYSQL_ENTRYPOINT_INITDB}/${COMPOSE_PROJECT_NAME}:/docker-entrypoint-initdb.d
       ports:
-        - "${MYSQL_PORT}:3306"
+        - "3306"
       networks:
         - backend
 
@@ -218,7 +218,7 @@ services:
       volumes:
         - ${DATA_PATH_HOST}/redis:/data
       ports:
-        - "${REDIS_PORT}:6379"
+        - "6379"
       networks:
         - backend
 
