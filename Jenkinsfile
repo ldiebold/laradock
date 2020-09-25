@@ -41,7 +41,7 @@ pipeline {
 
         sh 'docker-compose exec -T -w /var/www/admin workspace yarn'
 
-        sh 'docker-compose exec -T -w /var/www/admin workspace yarn build:pwa'
+        // sh 'docker-compose exec -T -w /var/www/admin workspace yarn build:pwa'
       }
     }
 
@@ -55,7 +55,7 @@ pipeline {
 
         sh 'docker-compose exec -T -w /var/www/app workspace yarn'
 
-        sh 'docker-compose exec -T -w /var/www/app workspace yarn build:pwa'
+        // sh 'docker-compose exec -T -w /var/www/app workspace yarn build:pwa'
       }
     }
 

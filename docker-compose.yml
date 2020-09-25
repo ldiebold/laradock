@@ -71,7 +71,7 @@ services:
       networks:
         - frontend
         - backend
-      ipc: host
+      # ipc: host
 
 ### PHP-FPM ##############################################
     php-fpm:
