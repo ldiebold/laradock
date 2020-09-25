@@ -64,10 +64,10 @@ services:
         - DOCKER_TLS_VERIFY=1
         - DOCKER_TLS_CERTDIR=/certs
         - DOCKER_CERT_PATH=/certs/client
-        - DISPLAY
-        - QT_X11_NO-MITSHM=1
+        # - DISPLAY
+        # - QT_X11_NO-MITSHM=1
         - ELECTRON_ENABLE_LOGGING=false
-        - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+        # - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
       networks:
         - frontend
         - backend

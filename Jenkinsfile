@@ -41,6 +41,10 @@ pipeline {
       }
     }
 
+    stage('Build Production Code') {
+      
+    }
+
     stage('Prepare Docker Containers') {
       steps {
         sh 'docker-compose down'
