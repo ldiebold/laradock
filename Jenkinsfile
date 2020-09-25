@@ -48,6 +48,7 @@ pipeline {
         sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
         sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
         sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
+        
         sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
         sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
         sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
