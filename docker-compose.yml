@@ -178,14 +178,12 @@ services:
         - ${NGINX_SSL_PATH}:/etc/nginx/ssl
       ports:
         - "80"
-        - "443"
+        - "443:443"
+        - "9091:9091"
+        - "9092:9092"
       depends_on:
         - php-fpm
       networks:
-        frontend:
-          aliases:
-            - first
-            - second
         backend:
           aliases:
             - api.agripath.test
@@ -208,7 +206,7 @@ services:
         - ${DATA_PATH_HOST}/${COMPOSE_PROJECT_NAME}/mysql:/var/lib/mysql
         - ${MYSQL_ENTRYPOINT_INITDB}/${COMPOSE_PROJECT_NAME}:/docker-entrypoint-initdb.d
       ports:
-        - "3306"
+        - "3306:3306"
       networks:
         - backend
 

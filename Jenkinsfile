@@ -1,9 +1,15 @@
 pipeline {
   agent any
+
+  environment {
+    docker_compose = 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml'
+  }
+
   stages {
+
     stage('Start Docker Workspace') {
       steps {
-        sh 'docker-compose up -d workspace'
+        sh '${docker_compose} up -d workspace'
       }
     }
 
@@ -21,13 +27,13 @@ pipeline {
           }
         }
 
-        sh 'docker-compose exec -T -w /var/www/api workspace composer install'
+        sh '${docker_compose} exec -T -w /var/www/api workspace composer install'
 
-        sh 'docker-compose exec -T -w /var/www/api workspace yarn'
+        sh '${docker_compose} exec -T -w /var/www/api workspace yarn'
 
-        sh 'docker-compose exec -T -w /var/www/api workspace yarn cy:install'
+        sh '${docker_compose} exec -T -w /var/www/api workspace yarn cy:install'
 
-        sh 'docker-compose exec -T -w /var/www/api workspace php artisan key:generate'
+        sh '${docker_compose} exec -T -w /var/www/api workspace php artisan key:generate'
       }
     }
 
@@ -39,9 +45,9 @@ pipeline {
           git 'git@github.com:ldiebold/agripath-admin.git'
         }
 
-        sh 'docker-compose exec -T -w /var/www/admin workspace yarn'
+        sh '${docker_compose} exec -T -w /var/www/admin workspace yarn'
 
-        // sh 'docker-compose exec -T -w /var/www/admin workspace yarn build:pwa'
+        // sh '${docker_compose} exec -T -w /var/www/admin workspace yarn build:pwa'
       }
     }
 
@@ -53,22 +59,22 @@ pipeline {
           git 'git@github.com:ldiebold/agripath-app.git'
         }
 
-        sh 'docker-compose exec -T -w /var/www/app workspace yarn'
+        sh '${docker_compose} exec -T -w /var/www/app workspace yarn'
 
-        // sh 'docker-compose exec -T -w /var/www/app workspace yarn build:pwa'
+        // sh '${docker_compose} exec -T -w /var/www/app workspace yarn build:pwa'
       }
     }
 
     stage('Prepare Docker Containers') {
       steps {
-        sh 'docker-compose down'
+        sh '${docker_compose} down'
 
-        sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
-        sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
-        sh 'COMPOSE_PROJECT_NAME=agripath_1 docker-compose exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
+        sh 'COMPOSE_PROJECT_NAME=agripath_1 ${docker_compose} up -d mysql php-fpm redis workspace nginx'
+        sh 'COMPOSE_PROJECT_NAME=agripath_1 ${docker_compose} exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
+        sh 'COMPOSE_PROJECT_NAME=agripath_1 ${docker_compose} exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
         
-        sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose -f docker-compose.yml up -d mysql php-fpm redis workspace nginx'
-        sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
+        sh 'COMPOSE_PROJECT_NAME=agripath_2 ${docker_compose} up -d mysql php-fpm redis workspace nginx'
+        sh 'COMPOSE_PROJECT_NAME=agripath_2 ${docker_compose} exec -T mysql mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS agripath;"'
         // sh 'COMPOSE_PROJECT_NAME=agripath_2 docker-compose exec -T -w /var/www/api php-fpm chown -R www-data:www-data .'
       }
     }
