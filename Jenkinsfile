@@ -42,11 +42,9 @@ pipeline {
     }
 
     stage('Run Tests') {
-      stage('API') {
-        environment { COMPOSE_PROJECT_NAME = 'agripath_1' }
-        steps {
-          sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
-        }
+      environment { COMPOSE_PROJECT_NAME = 'agripath_1' }
+      steps {
+        sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
       }
     }
   }
