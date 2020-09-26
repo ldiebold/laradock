@@ -1,6 +1,6 @@
 version: '3.7'
 
-# services:
+services:
 ### Workspace Utilities ##################################
     # workspace:
 
@@ -8,13 +8,20 @@ version: '3.7'
     # php-fpm:
 
 ### NGINX Server #########################################
-    # nginx:
+    nginx:
+        ports:
+            - "80"
+            - "443"
 
 ### MySQL ################################################
-    # mysql:
+    mysql:
+      ports:
+        - "3306"
 
 ### Redis ################################################
     # redis:
 
 ### Laravel Echo Server #######################################
-    # laravel-echo-server:
+    laravel-echo-server:
+      ports:
+        - "6001"

@@ -18,7 +18,6 @@ pipeline {
         sh 'mkdir -p ../code/api'
         dir(path: '../code/api') {
           git 'git@github.com:ldiebold/api.git'
-          // www-data needs ownership of storage so logs can be created
           script {
             // if there's no .env file, lets go ahead and create it from the example .env
             if (!fileExists('.env')) {
