@@ -1,5 +1,5 @@
 pipeline {
-  agent node
+  agent any
 
   environment {
     docker_compose = 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml'
