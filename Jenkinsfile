@@ -13,55 +13,57 @@ pipeline {
       }
     }
 
-    parallel {
-      stage('Setup API Code') {
-        steps {
-          sh 'mkdir -p ../code/api'
-          dir(path: '../code/api') {
-            git 'git@github.com:ldiebold/api.git'
-            script {
-              // if there's no .env file, lets go ahead and create it from the example .env
-              if (!fileExists('.env')) {
-                sh 'cp .env.cypress .env'
+    stage('Setup') {
+      parallel {
+        stage('Setup API Code') {
+          steps {
+            sh 'mkdir -p ../code/api'
+            dir(path: '../code/api') {
+              git 'git@github.com:ldiebold/api.git'
+              script {
+                // if there's no .env file, lets go ahead and create it from the example .env
+                if (!fileExists('.env')) {
+                  sh 'cp .env.cypress .env'
+                }
               }
             }
+
+            sh '${docker_compose} exec -T -w /var/www/api workspace composer install'
+
+            sh '${docker_compose} exec -T -w /var/www/api workspace yarn'
+
+            sh '${docker_compose} exec -T -w /var/www/api workspace yarn cy:install'
+
+            sh '${docker_compose} exec -T -w /var/www/api workspace php artisan key:generate'
           }
-
-          sh '${docker_compose} exec -T -w /var/www/api workspace composer install'
-
-          sh '${docker_compose} exec -T -w /var/www/api workspace yarn'
-
-          sh '${docker_compose} exec -T -w /var/www/api workspace yarn cy:install'
-
-          sh '${docker_compose} exec -T -w /var/www/api workspace php artisan key:generate'
         }
-      }
 
-      stage('Setup Admin Code') {
-        steps {
-          sh 'mkdir -p ../code/admin'
+        stage('Setup Admin Code') {
+          steps {
+            sh 'mkdir -p ../code/admin'
 
-          dir(path: '../code/admin') {
-            git 'git@github.com:ldiebold/agripath-admin.git'
+            dir(path: '../code/admin') {
+              git 'git@github.com:ldiebold/agripath-admin.git'
+            }
+
+            sh '${docker_compose} exec -T -w /var/www/admin workspace yarn'
+
+            // sh '${docker_compose} exec -T -w /var/www/admin workspace yarn build:pwa'
           }
-
-          sh '${docker_compose} exec -T -w /var/www/admin workspace yarn'
-
-          // sh '${docker_compose} exec -T -w /var/www/admin workspace yarn build:pwa'
         }
-      }
 
-      stage('Setup App Code') {
-        steps {
-          sh 'mkdir -p ../code/app'
+        stage('Setup App Code') {
+          steps {
+            sh 'mkdir -p ../code/app'
 
-          dir(path: '../code/app') {
-            git 'git@github.com:ldiebold/agripath-app.git'
+            dir(path: '../code/app') {
+              git 'git@github.com:ldiebold/agripath-app.git'
+            }
+
+            sh '${docker_compose} exec -T -w /var/www/app workspace yarn'
+
+            // sh '${docker_compose} exec -T -w /var/www/app workspace yarn build:pwa'
           }
-
-          sh '${docker_compose} exec -T -w /var/www/app workspace yarn'
-
-          // sh '${docker_compose} exec -T -w /var/www/app workspace yarn build:pwa'
         }
       }
     }
