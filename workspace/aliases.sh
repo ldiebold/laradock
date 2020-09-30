@@ -149,3 +149,13 @@ function fs() {
 		du $arg .[^.]* ./*;
 	fi;
 }
+
+export APP_DIRECTORY="/var/www/app"
+export ADMIN_DIRECTORY="/var/www/admin"
+export API_DIRECTORY="/var/www/api"
+
+export ORM_CLASSES_DIRECTORY="/var/www/orm-classes"
+export JS_HELPERS_DIRECTORY="/var/www/js-helpers"
+
+# Development
+alias yarnlinks="cd ${ORM_CLASSES_DIRECTORY} && yarn link && cd ${JS_HELPERS_DIRECTORY} && yarn link"

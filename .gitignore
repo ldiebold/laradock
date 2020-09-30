@@ -4,6 +4,7 @@ log.txt
 /data
 /cypress
 .env
+.aliases
 /.project
 .docker-sync
 /jenkins/jenkins_home

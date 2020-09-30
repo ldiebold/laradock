@@ -1,0 +1,12 @@
+# example aliases too improve developer experience using laradock with agripath!
+# copy this file with something like `cp aliases-example .aliases`
+# and make changes as you see fit :)
+
+export PROJECT_DIRECTORY="/path/to/agripath/apps/folder"
+
+# Since this file is used for development, let's pull in the
+# development related config file, and store it in the environment for brevity
+export docker_compose="docker-compose -f docker-compose.yml -f docker-compose-dev.yml"
+
+# Aliases
+alias dbash="cd ${PROJECT_DIRECTORY} && ${docker_compose} exec workspace bash"
