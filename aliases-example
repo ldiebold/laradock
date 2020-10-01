@@ -2,11 +2,18 @@
 # copy this file with something like `cp aliases-example .aliases`
 # and make changes as you see fit :)
 
-export PROJECT_DIRECTORY="/path/to/agripath/apps/folder"
+export LARADOCK_PROJECT_DIRECTORY="~/code/agripath/laradock"
 
 # Since this file is used for development, let's pull in the
 # development related config file, and store it in the environment for brevity
 export docker_compose="docker-compose -f docker-compose.yml -f docker-compose-dev.yml"
 
 # Aliases
-alias dbash="cd ${PROJECT_DIRECTORY} && ${docker_compose} exec workspace bash"
+alias dbash="cd ${LARADOCK_PROJECT_DIRECTORY} && ${docker_compose} exec workspace bash"
+export docker_dev="docker-compose -f ${LARADOCK_PROJECT_DIRECTORY}/docker-compose.yml -f ${LARADOCK_PROJECT_DIRECTORY}/docker-compose-dev.yml --project-directory ${LARADOCK_PROJECT_DIRECTORY}"
+alias d="$docker_dev"
+alias dup="$docker_dev up -d"
+alias dbash="$docker_dev exec workspace bash"
+alias dbashapi="$docker_dev exec -w /var/www/api workspace bash"
+alias dbashadmin="$docker_dev exec -w /var/www/admin workspace bash"
+alias dbashapp="$docker_dev exec -w /var/www/app workspace bash"
