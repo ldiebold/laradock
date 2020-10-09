@@ -2,7 +2,9 @@ version: '3.7'
 
 services:
 ### Workspace Utilities ##################################
-    # workspace:
+    workspace:
+      ports:
+        - "2222:22"
 
 ### PHP-FPM ##############################################
     # php-fpm:

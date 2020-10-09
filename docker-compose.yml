@@ -25,6 +25,7 @@ services:
           - UBUNTU_SOURCE=${UBUNTU_SOURCE}
           - BASE_IMAGE_TAG_PREFIX=${WORKSPACE_BASE_IMAGE_TAG_PREFIX}
           - LARADOCK_PHP_VERSION=${PHP_VERSION}
+          - INSTALL_WORKSPACE_SSH=${WORKSPACE_INSTALL_WORKSPACE_SSH}
           - LARADOCK_PHALCON_VERSION=${PHALCON_VERSION}
           - INSTALL_PHPREDIS=${WORKSPACE_INSTALL_PHPREDIS}
           - NVM_NODEJS_ORG_MIRROR=${WORKSPACE_NVM_NODEJS_ORG_MIRROR}
@@ -53,10 +54,6 @@ services:
         - ./cypress/.cache/Cypress:/root/.cache/Cypress
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
-      ports:
-        - "22"
-        # - "${WORKSPACE_BROWSERSYNC_HOST_PORT}:3000"
-        # - "${WORKSPACE_BROWSERSYNC_UI_HOST_PORT}:3001"
       tty: true
       environment:
         - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}

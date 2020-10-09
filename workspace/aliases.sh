@@ -156,6 +156,7 @@ export API_DIRECTORY="/var/www/api"
 
 export ORM_CLASSES_DIRECTORY="/var/www/orm-classes"
 export JS_HELPERS_DIRECTORY="/var/www/js-helpers"
+export VUEX_ORM_REST_DIRECTORY="/var/www/js-helpers"
 
 # Development
-alias yarnlinks="cd ${ORM_CLASSES_DIRECTORY} && yarn link && cd ${JS_HELPERS_DIRECTORY} && yarn link"
+alias yarnlinks="cd ${ORM_CLASSES_DIRECTORY} && yarn link && cd ${JS_HELPERS_DIRECTORY} && cd ${VUEX_ORM_REST_DIRECTORY} && yarn link"
