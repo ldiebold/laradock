@@ -156,7 +156,15 @@ export API_DIRECTORY="/var/www/api"
 
 export ORM_CLASSES_DIRECTORY="/var/www/orm-classes"
 export JS_HELPERS_DIRECTORY="/var/www/js-helpers"
-export VUEX_ORM_REST_DIRECTORY="/var/www/js-helpers"
+export VUEX_ORM_REST_DIRECTORY="/var/www/vuex-orm-rest"
+export JS_CONSTANTS_DIRECTORY="/var/www/js-constants"
 
 # Development
-alias yarnlinks="cd ${ORM_CLASSES_DIRECTORY} && yarn link && cd ${JS_HELPERS_DIRECTORY} && cd ${VUEX_ORM_REST_DIRECTORY} && yarn link"
+alias yarnlinks="cd ${ORM_CLASSES_DIRECTORY} && yarn link && cd ${JS_HELPERS_DIRECTORY} && yarn link && cd ${VUEX_ORM_REST_DIRECTORY} && yarn link && cd ${JS_CONSTANTS_DIRECTORY} && yarn link"
+
+export AGRIPATH_CODE_DIRECTORY="/var/www"
+export AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY="${AGRIPATH_CODE_DIRECTORY}/quasar-extensions"
+
+alias agbase="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/base-components/ui"
+alias agrest="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/rest-components/ui"
+alias agmodel="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/model-components/ui"

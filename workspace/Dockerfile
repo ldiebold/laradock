@@ -399,7 +399,7 @@ RUN if [ ${INSTALL_INOTIFY} = true ]; then \
 ###########################################################################
 
 ARG INSTALL_AST=false
-ARG AST_VERSION=1.0.3
+ARG AST_VERSION=1.0.4
 ENV AST_VERSION ${AST_VERSION}
 
 RUN if [ ${INSTALL_AST} = true ]; then \
@@ -433,6 +433,7 @@ RUN if [ ${INSTALL_FSWATCH} = true ]; then \
 ARG NODE_VERSION=node
 ENV NODE_VERSION ${NODE_VERSION}
 ARG INSTALL_NODE=false
+ARG INSTALL_LERNA=false
 ARG INSTALL_NPM_GULP=false
 ARG INSTALL_NPM_BOWER=false
 ARG INSTALL_NPM_VUE_CLI=false
@@ -456,6 +457,9 @@ RUN if [ ${INSTALL_NODE} = true ]; then \
   ;fi \
   && if [ ${INSTALL_NPM_GULP} = true ]; then \
   npm install -g gulp \
+  ;fi \
+  && if [ ${INSTALL_LERNA} = true ]; then \
+  npm install -g lerna \
   ;fi \
   && if [ ${INSTALL_NPM_BOWER} = true ]; then \
   npm install -g bower \
@@ -572,10 +576,11 @@ RUN if [ ${INSTALL_LINUXBREW} = true ]; then \
 # PYTHON2:
 ###########################################################################
 
-ARG INSTALL_PYTHON=false
+ARG INSTALL_PYTHON=true
 
 RUN if [ ${INSTALL_PYTHON} = true ]; then \
-  apt-get -y install python python-pip python-dev build-essential  \
+  apt-get update -yqq \
+  && apt-get -y install python python-pip python-dev build-essential  \
   && python -m pip install --upgrade pip  \
   && python -m pip install --upgrade virtualenv \
   ;fi
