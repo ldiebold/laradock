@@ -17,3 +17,6 @@ alias dbash="$docker_dev exec workspace bash"
 alias dbashapi="$docker_dev exec -w /var/www/api workspace bash"
 alias dbashadmin="$docker_dev exec -w /var/www/admin workspace bash"
 alias dbashapp="$docker_dev exec -w /var/www/app workspace bash"
+
+# Database
+alias cloneagdb="mysqldump -u forge -h 45.76.117.179 -p agripath_production | mysql -u agripath -h 127.0.0.1 -psecret agripath"
