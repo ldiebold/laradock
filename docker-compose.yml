@@ -14,6 +14,18 @@ volumes:
 
 services:
 
+### App ##################################
+    app:
+      privileged: true
+      build:
+        context: ./quasar-base
+      networks:
+        - frontend
+        - backend
+      volumes:
+        - '../app:/home/node/app'
+        - ./cypress/.cache/Cypress:/root/.cache/Cypress
+
 ### Workspace Utilities ##################################
     workspace:
       privileged: true
@@ -150,8 +162,8 @@ services:
         - DOCKER_TLS_CERTDIR=/certs
         - DOCKER_CERT_PATH=/certs/client
         - FAKETIME=${PHP_FPM_FAKETIME}
-      depends_on:
-        - workspace
+      # depends_on:
+      #   - workspace
       networks:
         - backend
 
