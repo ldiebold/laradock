@@ -8,7 +8,7 @@ pipeline {
               label "agent1"
           }
           steps {
-              sh "echo 'app built'"
+              sh "echo 'app built by $NODE_NAME'"
           }
         }
         stage('build admin') {
@@ -16,7 +16,7 @@ pipeline {
               label "agent2"
           }
           steps {
-              sh "echo 'admin built'"
+              sh "echo 'admin built by $NODE_NAME'"
           }
         }
       }
