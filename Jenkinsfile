@@ -8,6 +8,10 @@ pipeline {
   }
 
   stages {
-    
+    stage('Start Docker Workspace') {
+      steps {
+        sh 'echo "Success!!!"'
+      }
+    }
   }
 }
