@@ -11,14 +11,6 @@ pipeline {
               sh "echo 'app built by $NODE_NAME'"
           }
         }
-        stage('build admin') {
-          agent {
-              label "agent2"
-          }
-          steps {
-              sh "echo 'admin built by $NODE_NAME'"
-          }
-        }
       }
     }
   }
