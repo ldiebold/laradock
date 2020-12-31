@@ -2,7 +2,7 @@
 # copy this file with something like `cp aliases-example .aliases`
 # and make changes as you see fit :)
 
-export LARADOCK_PROJECT_DIRECTORY="~/code/agripath/laradock"
+export LARADOCK_PROJECT_DIRECTORY="~/code/agripath-monorepo/laradock"
 
 # Since this file is used for development, let's pull in the
 # development related config file, and store it in the environment for brevity
