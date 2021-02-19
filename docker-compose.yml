@@ -61,8 +61,9 @@ services:
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ./php-worker/supervisord.d:/etc/supervisord.d
+        - ./cypress/.cache/Cypress:/var/www/.cache/Cypress
         - /tmp/.X11-unix:/tmp/.X11-unix
-        - ./cypress/.cache/Cypress:/root/.cache/Cypress
+        - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       tty: true
@@ -72,14 +73,15 @@ services:
         - DOCKER_TLS_VERIFY=1
         - DOCKER_TLS_CERTDIR=/certs
         - DOCKER_CERT_PATH=/certs/client
-        # - DISPLAY
-        # - QT_X11_NO-MITSHM=1
+        - CYPRESS_CACHE_FOLDER=/var/www/.cache/Cypress
+        - DISPLAY=:0
         - ELECTRON_ENABLE_LOGGING=false
-        # - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/var/run/dbus/system_bus_socket
+        - QT_X11_NO_MITSHM=1
+        - _X11_NO_MITSHM=1
+        - _MITSHM=0
       networks:
         - frontend
         - backend
-      # ipc: host
 
 ### PHP-FPM ##############################################
     php-fpm:
