@@ -168,3 +168,6 @@ export AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY="${AGRIPATH_CODE_DIRECTORY}/quasar-e
 alias agbase="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/base-components/ui"
 alias agrest="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/rest-components/ui"
 alias agmodel="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/model-components/ui"
+alias agadmin="cd /var/www/admin"
+alias agapp="cd /var/www/app"
+alias agapi="cd /var/www/api"
