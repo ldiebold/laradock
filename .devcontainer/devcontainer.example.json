@@ -1,0 +1,34 @@
+{
+  "name": "Laradock",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "../docker-compose-dev.yml"
+  ],
+  "remoteUser": "laradock",
+  "runServices": [
+    "nginx",
+    "mysql",
+    "php-fpm",
+    "redis"
+  ],
+  "service": "workspace",
+  "workspaceFolder": "/var/www",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "uname -a",
+  "extensions": [
+    "octref.vetur",
+    "patbenatar.advanced-new-file",
+    "wmaurer.change-case",
+    "perkovec.emoji",
+    "dbaeumer.vscode-eslint",
+    "sleistner.vscode-fileutils",
+    "austenc.laravel-docs",
+    "amiralizadeh9480.laravel-extra-intellisense",
+    "christian-kohler.npm-intellisense",
+    "damianbal.vs-phpclassgen",
+    "neilbrayfield.php-docblocker",
+    "bmewburn.vscode-intelephense-client",
+    "vincentkos.snippet-creator",
+    "dotjoshjohnson.xml"
+  ]
+}
