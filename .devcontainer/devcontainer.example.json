@@ -29,6 +29,7 @@
     "neilbrayfield.php-docblocker",
     "bmewburn.vscode-intelephense-client",
     "vincentkos.snippet-creator",
-    "dotjoshjohnson.xml"
+    "dotjoshjohnson.xml",
+    "ms-azuretools.vscode-docker"
   ]
 }
