@@ -30,8 +30,3 @@ services:
 
 ### Redis ################################################
     # redis:
-
-### Laravel Echo Server #######################################
-    laravel-echo-server:
-      ports:
-        - "6001:6001"

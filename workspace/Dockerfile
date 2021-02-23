@@ -127,15 +127,17 @@ USER root
 # Add the composer.json
 COPY ./composer.json /home/laradock/.composer/composer.json
 
-# Add the auth.json for magento 2 credentials
-COPY ./auth.json /home/laradock/.composer/auth.json
-
 # Make sure that ~/.composer belongs to laradock
 RUN chown -R laradock:laradock /home/laradock/.composer
 
 # Export composer vendor path
 RUN echo "" >> ~/.bashrc && \
   echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> ~/.bashrc
+
+# Update composer
+ARG COMPOSER_VERSION=2
+ENV COMPOSER_VERSION ${COMPOSER_VERSION}
+RUN composer self-update --${COMPOSER_VERSION}
 
 USER laradock
 
@@ -146,15 +148,6 @@ ENV COMPOSER_GLOBAL_INSTALL ${COMPOSER_GLOBAL_INSTALL}
 RUN if [ ${COMPOSER_GLOBAL_INSTALL} = true ]; then \
   # run the install
   composer global install \
-  ;fi
-
-# Check if auth file is disabled
-ARG COMPOSER_AUTH=false
-ENV COMPOSER_AUTH ${COMPOSER_AUTH}
-
-RUN if [ ${COMPOSER_AUTH} = false ]; then \
-  # remove the file
-  rm /home/laradock/.composer/auth.json \
   ;fi
 
 ARG COMPOSER_REPO_PACKAGIST
@@ -179,114 +172,6 @@ RUN echo "" >> ~/.bashrc && \
   echo 'export PATH="/var/www/vendor/bin:$PATH"' >> ~/.bashrc
 
 ###########################################################################
-# Crontab
-###########################################################################
-
-USER root
-
-COPY ./crontab /etc/cron.d
-
-RUN chmod -R 644 /etc/cron.d
-
-###########################################################################
-# GMP (GNU Multiple Precision):
-###########################################################################
-
-USER root
-
-ARG INSTALL_GMP=false
-ARG PHP_VERSION=${LARADOCK_PHP_VERSION}
-
-RUN if [ ${INSTALL_GMP} = true ]; then \
-  # Install the PHP GMP extension
-  apt-get -y install php${LARADOCK_PHP_VERSION}-gmp \
-  ;fi
-
-###########################################################################
-# SSH2:
-###########################################################################
-
-USER root
-
-ARG INSTALL_SSH2=false
-
-RUN if [ ${INSTALL_SSH2} = true ]; then \
-  # Install the PHP SSH2 extension
-  apt-get -y install libssh2-1-dev php${LARADOCK_PHP_VERSION}-ssh2 \
-  ;fi
-
-###########################################################################
-# SOAP:
-###########################################################################
-
-USER root
-
-ARG INSTALL_SOAP=false
-
-RUN if [ ${INSTALL_SOAP} = true ]; then \
-  # Install the PHP SOAP extension
-  apt-get -y install libxml2-dev php${LARADOCK_PHP_VERSION}-soap \
-  ;fi
-
-###########################################################################
-# XSL:
-###########################################################################
-
-USER root
-
-ARG INSTALL_XSL=false
-
-RUN if [ ${INSTALL_XSL} = true ]; then \
-  # Install the PHP XSL extension
-  apt-get -y install libxslt-dev php${LARADOCK_PHP_VERSION}-xsl \
-  ;fi
-
-
-###########################################################################
-# LDAP:
-###########################################################################
-
-ARG INSTALL_LDAP=false
-
-RUN if [ ${INSTALL_LDAP} = true ]; then \
-  apt-get install -y libldap2-dev && \
-  apt-get install -y php${LARADOCK_PHP_VERSION}-ldap \
-  ;fi
-
-###########################################################################
-# SMB:
-###########################################################################
-
-ARG INSTALL_SMB=false
-
-RUN if [ ${INSTALL_SMB} = true ]; then \
-  apt-get install -y smbclient php-smbclient coreutils \
-  ;fi
-
-###########################################################################
-# IMAP:
-###########################################################################
-
-ARG INSTALL_IMAP=false
-
-RUN if [ ${INSTALL_IMAP} = true ]; then \
-  apt-get install -y php${LARADOCK_PHP_VERSION}-imap \
-  ;fi
-
-###########################################################################
-# Subversion:
-###########################################################################
-
-USER root
-
-ARG INSTALL_SUBVERSION=false
-
-RUN if [ ${INSTALL_SUBVERSION} = true ]; then \
-  apt-get install -y subversion \
-  ;fi
-
-
-###########################################################################
 # xDebug:
 ###########################################################################
 
@@ -306,38 +191,6 @@ COPY ./xdebug.ini /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/xdebug.ini
 RUN sed -i "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/" /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/xdebug.ini && \
   sed -i "s/xdebug.remote_enable=0/xdebug.remote_enable=1/" /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/xdebug.ini && \
   sed -i "s/xdebug.cli_color=0/xdebug.cli_color=1/" /etc/php/${LARADOCK_PHP_VERSION}/cli/conf.d/xdebug.ini
-
-###########################################################################
-# pcov:
-###########################################################################
-
-USER root
-
-ARG INSTALL_PCOV=false
-
-RUN if [ ${INSTALL_PCOV} = true ]; then \
-  if [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-  if [ $(php -r "echo PHP_MINOR_VERSION;") != "0" ]; then \
-  pecl install pcov && \
-  echo "extension=pcov.so" >> /etc/php/${LARADOCK_PHP_VERSION}/cli/php.ini && \
-  echo "pcov.enabled" >> /etc/php/${LARADOCK_PHP_VERSION}/cli/php.ini \
-  ;fi \
-  ;fi \
-  ;fi
-
-
-###########################################################################
-# Phpdbg:
-###########################################################################
-
-USER root
-
-ARG INSTALL_PHPDBG=false
-
-RUN if [ ${INSTALL_PHPDBG} = true ]; then \
-  # Load the xdebug extension only with phpunit commands
-  apt-get install -y --force-yes php${LARADOCK_PHP_VERSION}-phpdbg \
-  ;fi
 
 ###########################################################################
 # ssh:
@@ -434,6 +287,9 @@ ARG NODE_VERSION=node
 ENV NODE_VERSION ${NODE_VERSION}
 ARG INSTALL_NODE=false
 ARG INSTALL_LERNA=false
+ARG INSTALL_HYGEN=false
+ARG INSTALL_PLOP=false
+ARG INSTALL_QUASAR_CLI=false
 ARG INSTALL_NPM_GULP=false
 ARG INSTALL_NPM_BOWER=false
 ARG INSTALL_NPM_VUE_CLI=false
@@ -460,6 +316,15 @@ RUN if [ ${INSTALL_NODE} = true ]; then \
   ;fi \
   && if [ ${INSTALL_LERNA} = true ]; then \
   npm install -g lerna \
+  ;fi \
+  && if [ ${INSTALL_HYGEN} = true ]; then \
+  npm install -g hygen \
+  ;fi \
+  && if [ ${INSTALL_PLOP} = true ]; then \
+  npm install -g plop \
+  ;fi \
+  && if [ ${INSTALL_QUASAR_CLI} = true ]; then \
+  npm install -g @quasar/cli \
   ;fi \
   && if [ ${INSTALL_NPM_BOWER} = true ]; then \
   npm install -g bower \
