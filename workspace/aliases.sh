@@ -10,6 +10,35 @@ COL_BLUE=$ESC_SEQ"34;01m"
 COL_MAGENTA=$ESC_SEQ"35;01m"
 COL_CYAN=$ESC_SEQ"36;01m"
 
+# Color Prompt
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
+    else
+        color_prompt=
+    fi
+fi
+
+# Show git branch name
+color_prompt=yes
+parse_git_branch() {
+ git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+if [ "$color_prompt" = yes ]; then
+ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\]$(parse_git_branch)\[\033[00m\]\$ '
+else
+ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w$(parse_git_branch)\$ '
+fi
+unset color_prompt force_color_prompt
+
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
 	colorflag="--color"
@@ -149,3 +178,26 @@ function fs() {
 		du $arg .[^.]* ./*;
 	fi;
 }
+
+export APP_DIRECTORY="/var/www/app"
+export ADMIN_DIRECTORY="/var/www/admin"
+export API_DIRECTORY="/var/www/api"
+
+export ORM_CLASSES_DIRECTORY="/var/www/orm-classes"
+export JS_HELPERS_DIRECTORY="/var/www/js-helpers"
+export VUEX_ORM_REST_DIRECTORY="/var/www/vuex-orm-rest"
+export JS_CONSTANTS_DIRECTORY="/var/www/js-constants"
+
+# Development
+alias yarnlinks="cd ${ORM_CLASSES_DIRECTORY} && yarn link && cd ${JS_HELPERS_DIRECTORY} && yarn link && cd ${VUEX_ORM_REST_DIRECTORY} && yarn link && cd ${JS_CONSTANTS_DIRECTORY} && yarn link"
+
+export AGRIPATH_CODE_DIRECTORY="/var/www"
+export AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY="${AGRIPATH_CODE_DIRECTORY}/quasar-extensions"
+
+alias agbase="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/base-components/ui"
+alias agrest="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/rest-components/ui"
+alias agmodel="cd ${AGRIPATH_QUASAR_EXTENSIONS_DIRECTORY}/model-components/ui"
+
+alias agapp="cd ${AGRIPATH_CODE_DIRECTORY}/app"
+alias agadmin2="cd ${AGRIPATH_CODE_DIRECTORY}/admin2"
+alias agadmin="cd ${AGRIPATH_CODE_DIRECTORY}/admin"

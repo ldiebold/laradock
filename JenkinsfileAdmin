@@ -1,0 +1,44 @@
+pipeline {
+  agent any
+
+  environment {
+    COMPOSE_PROJECT_NAME = 'agripath_admin'
+    docker_compose = 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml'
+  }
+
+  stages {
+    stage('Start Docker Workspace') {
+      steps {
+        sh '${docker_compose} up -d workspace'
+      }
+    }
+
+    stage('Setup') {
+        stage('Setup Admin Code') {
+          steps {
+            sh 'mkdir -p ../code/admin'
+
+            dir(path: '../code/admin') {
+              git 'git@github.com:ldiebold/agripath-admin.git'
+            }
+
+            sh '${docker_compose} exec -T -w /var/www/admin workspace yarn'
+
+            // sh '${docker_compose} exec -T -w /var/www/admin workspace yarn build:pwa'
+          }
+        }
+    }
+
+    stage('Prepare Docker Container') {
+      steps {
+        sh '${docker_compose} exec -T -w /var/www/admin php-fpm chown -R www-data:www-data .'
+      }
+    }
+
+    stage('Run Tests') {
+        steps {
+            sh 'docker-compose exec -T -w /var/www/admin workspace yarn test:e2e:CI'
+        }
+    }
+  }
+}

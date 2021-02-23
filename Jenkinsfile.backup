@@ -1,85 +1,51 @@
-#!/usr/bin/env groovy
+pipeline {
+  agent any
 
-node('master') {
-    stage('build') {
+  environment {
+    COMPOSE_PROJECT_NAME = 'agripath_api'
+    docker_compose = 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml'
+    api_exec = 'docker-compose -f docker-compose.yml -f docker-compose-ci.yml exec -T -w /var/www/api '
+  }
 
-        dir ('./laradock') {
-            // Pull in laradock
-            git url: 'git@github.com:ldiebold/laradock.git'
-
-            // Start services (Let docker-compose build containers for testing)
-            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d"
-        }
-
-        // If the application directories don't exist, create them
-        sh "mkdir -p ./code/api"
-        sh "mkdir -p ./code/app"
-        sh "mkdir -p ./code/admin"
-
-        dir ('./code/api') {
-            // Pull the api code
-            git url: 'git@github.com:ldiebold/api.git'
-        }
-
-        dir ('./laradock') {
-            // Install api packages
-            sh "docker-compose exec -T -w /var/www/api workspace yarn"
-        }
-
-        dir ('./code/app') {
-            // Pull the app code
-            git url: 'git@github.com:ldiebold/agripath-app.git'
-        }
-
-        dir ('./code/admin') {
-            // Pull the admin code
-            git url: 'git@github.com:ldiebold/agripath-admin.git'
-        }
-
-        // API Setup
-        dir ('./laradock') {
-            // Install dependencies
-            sh "docker-compose exec -T -w /var/www/api workspace composer install"
-            // Generate key
-            sh "docker-compose exec -T -w '/var/www/api' workspace php artisan key:generate"
-        }
-
-        // App Setup
-        dir ('./laradock') {
-            // Install dependencies
-            sh "docker-compose exec -T -w /var/www/app workspace yarn"
-            // Build production code
-            sh "docker-compose exec -T -w /var/www/app workspace yarn build"
-            // Serve production code!
-            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d app"
-        }
-
-        // Admin Setup
-        dir ('./laradock') {
-            // Install dependencies
-            sh "docker-compose exec -T -w /var/www/admin workspace yarn"
-            // Build production code
-            sh "docker-compose exec -T -w /var/www/admin workspace yarn build"
-            // Serve production code!
-            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml up -d admin"
-        }
-
-        dir ('./laradock') {
-            // Start services (Let docker-compose build containers for testing)
-            sh "docker-compose -f docker-compose.yml -f docker-compose-ci.yml restart nginx"
-
-            sh "docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI"
-        }
+  stages {
+    stage('Start Docker Workspace') {
+      steps {
+        sh '${docker_compose} up -d'
+      }
     }
-    // stage('test') {
-    //     sh "APP_ENV=testing ./develop test"
-    // }
+
+    stage('Setup') {
+      steps {
+        sh 'mkdir -p ../code/api'
+        dir(path: '../code/api') {
+          git 'git@github.com:ldiebold/api.git'
+          script {
+            // if there's no .env file, lets go ahead and create it from the example .env
+            if (!fileExists('.env')) {
+              sh 'cp .env.cypress .env'
+            }
+          }
+        }
+
+        sh '${api_exec} workspace composer install'
+        sh '${api_exec} workspace php artisan key:generate'
+        
+        sh '${api_exec} workspace yarn'
+        sh '${api_exec} workspace yarn cy:install'
+      }
+    }
+
+    stage('Prepare Docker Containers') {
+      steps {
+        sh '${api_exec} php-fpm chown -R www-data:www-data .'
+      }
+    }
+
+    stage('Run Tests') {
+      environment { COMPOSE_PROJECT_NAME = 'agripath_1' }
+      steps {
+        sh 'docker-compose exec -T -w /var/www/api workspace yarn test:e2e:CI'
+      }
+    }
+  }
 }
-
-// Start web server
-
-// Wait for web server to response
-
-// Run cypress tests
-
-// Stop web server
